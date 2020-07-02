@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: zookeeper-cluster
+  name: zookeeper-cluster
+  namespace: logging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper-cluster
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: zookeeper-cluster
+        name: zookeeper-cluster
+    spec:
+      containers:
+      - image: wurstmeister/zookeeper:latest
+        imagePullPolicy: IfNotPresent
+        name: zookeeper-cluster
+        ports:
+        - containerPort: 2181
+          protocol: TCP
+        - containerPort: 2888
+          protocol: TCP
+        - containerPort: 3888
+          protocol: TCP
+      restartPolicy: Always
